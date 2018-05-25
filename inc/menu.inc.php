@@ -30,7 +30,8 @@
       </li>      
       <li><a href=./controller.php?cas=ConsultSpe>Consultation Spécifique</a></li>
       <li><a href=./controller.php?cas=Modification>Modification</a></li>
-      <li><a href="#">Connexion</a></li>
+      <li><a href=./controller.php?cas=Connexion target=controller>Connexion</a></li>
+       <li><a href=./controller.php?cas=Deconnexion target=controller>Deconnexion</a></li>
     </ul>
   </div>
 </nav>
