@@ -84,7 +84,10 @@ function Insert($personne,$ville,$budget,$genre)
 	}
 //---------------------------------------------------------------------
 
-
+function Connexionsession()
+{
+return $this->monDao->Connexionsession();
+}
 
 
 };// fin de classe
