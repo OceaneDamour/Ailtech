@@ -244,6 +244,19 @@ class Vue
 		include "../inc/menu.inc.php";
 		echo '<div id="bloc">';
 	}
+	//----------------------------------------------
+	function afficheconnexion()
+	{
+		echo '<h1>Connexion utilisateur</h1>
+		<form action=./controller.php?cas=ConnexionSession method="post">
+			<label for="nom">Nom :</label>
+			<input type="text" name="login" id="nom" required />
+			<label for="mdp">Mot de passe :</label>
+			<input type="password" name="motpasse" id="motpasse" required />
+			<input type="submit" value="Connexion" >
+		</form>';
+	}
 
 };// fin de classe Vue
 ?>
+
