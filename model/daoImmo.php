@@ -15,7 +15,7 @@ class DaoImmo extends MyPDO
   function getAllOrderBy($ordre)
 	{ 
 	//echo "Ordre : ".$ordre."<br>";
-	$strSQL = "SELECT idDemande as 'identifiant de la Demande',d.idPersonne as 'identifiant de Personne',prenom,genre,ville,budget , superficie FROM demande d, personne p WHERE p.idPersonne=d.idPersonne order by ".$ordre;
+	$strSQL = "SELECT idDemande as 'identifiant de la Demande', d.idPersonne as 'identifiant de Personne',prenom,genre,ville,budget , superficie FROM demande d, personne p WHERE p.idPersonne=d.idPersonne order by ".$ordre;
 	$getAllOrderBy=$this->prepare($strSQL);
 	$getAllOrderBy->execute();
 	$t=$getAllOrderBy->fetchAll(PDO::FETCH_OBJ);
@@ -85,7 +85,7 @@ class DaoImmo extends MyPDO
 		$t=$getbudgetmax->fetchAll(PDO::FETCH_OBJ);
 		return $t;
 	}
-
+//---------------------------------------------------------------------	
 	function getbudgetmini()
 	{
 		$getbudgetmini=$this->prepare("SELECT MIN(budget) AS 'buget minimum' from demande");
@@ -93,7 +93,7 @@ class DaoImmo extends MyPDO
 		$t=$getbudgetmini->fetchAll(PDO::FETCH_OBJ);
 		return $t;
 	}
-
+//---------------------------------------------------------------------	
 	function getbugetsuperieurmoy()
 	{
 		$getbugetsuperieurmoy=$this->prepare("SELECT idDemande as 'numero demande ',budget,genre,ville FROM `demande` WHERE budget > (SELECT AVG (budget)from demande )");
@@ -101,7 +101,7 @@ class DaoImmo extends MyPDO
 		$t=$getbugetsuperieurmoy->fetchAll(PDO::FETCH_OBJ);
 		return $t;
 	}
-
+//---------------------------------------------------------------------	
 	function getnbbiengenre()
 	{
 		$getnbbiengenre=$this->prepare("SELECT count(budget) as 'Nombre de bien 'from demande ");
@@ -109,18 +109,41 @@ class DaoImmo extends MyPDO
 		$t=$getnbbiengenre->fetchAll(PDO::FETCH_OBJ);
 		return $t;
 	}
-function Modif($personne,$ville,$budget,$genre,$ide)
+//---------------------------------------------------------------------		
+	function Modif($personne,$ville,$budget,$genre,$ide)
 	{
 	$Modif=$this->prepare("UPDATE demande d, personne p SET p.prenom= ?, d.ville= ?, d.budget= ?, d.genre= ? WHERE p.idPersonne=d.idPersonne AND d.idDemande= ?");
 	$Modif->execute(array($personne,$ville,$budget,$genre,$ide));
 	// LA BONNE REQ DANS PHPMYADMIN
 	// UPDATE demande d, personne p SET p.prenom='jean', d.ville= 'Saint-Joseph' , d.budget= '150000' , d.genre= 'maison' , d.superficie= '120' WHERE p.idPersonne=d.idPersonne AND idDemande = 2;
 	}
-	
-function Insert($personne,$ville,$budget,$genre)
+//---------------------------------------------------------------------		
+	function Insert($personne,$ville,$budget,$genre)
 	{
 	$Insert=$this->prepare("INSERT INTO demande (isDemande, idPersonne, genre, ville, budget, superficie) VALUES ('', '', '?', '?', '?', '?')");
 	$Insert->execute(array($personne,$ville,$budget,$genre));	
 	}
-	
+
+//---------------------------------------------------------------------	
+	function recupmembre() // fonction qui récupere les membres de ma base de donnée
+	{
+	return $this->query("SELECT * FROM membres");
+	}
+//---------------------------------------------------------------------	
+	function Connexionsession()
+	{
+	$login=$_POST['login'];
+	$motpasse=$_POST['motpasse'];
+	$recupmembre=$this->recupmembre();
+	while ($stock=$recupmembre->fetch(PDO::FETCH_ASSOC)) {   //boucle récupère toute les données 
+		if ($stock['login']==$login && $stock['motpasse']== $motpasse) {
+				session_start();
+				$_SESSION['login']=$stock['login'];
+				$_SESSION['motpasse']=$stock['motpasse'];
+				return true;
+		}
+		
+	} 
+	return false;
+}
 };// fin de classe
