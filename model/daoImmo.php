@@ -85,7 +85,7 @@ class DaoImmo extends MyPDO
 		$t=$getbudgetmax->fetchAll(PDO::FETCH_OBJ);
 		return $t;
 	}
-//---------------------------------------------------------------------	
+
 	function getbudgetmini()
 	{
 		$getbudgetmini=$this->prepare("SELECT MIN(budget) AS 'buget minimum' from demande");
@@ -93,7 +93,7 @@ class DaoImmo extends MyPDO
 		$t=$getbudgetmini->fetchAll(PDO::FETCH_OBJ);
 		return $t;
 	}
-//---------------------------------------------------------------------	
+
 	function getbugetsuperieurmoy()
 	{
 		$getbugetsuperieurmoy=$this->prepare("SELECT idDemande as 'numero demande ',budget,genre,ville FROM `demande` WHERE budget > (SELECT AVG (budget)from demande )");
@@ -101,7 +101,7 @@ class DaoImmo extends MyPDO
 		$t=$getbugetsuperieurmoy->fetchAll(PDO::FETCH_OBJ);
 		return $t;
 	}
-//---------------------------------------------------------------------	
+
 	function getnbbiengenre()
 	{
 		$getnbbiengenre=$this->prepare("SELECT count(budget) as 'Nombre de bien 'from demande ");
@@ -109,34 +109,49 @@ class DaoImmo extends MyPDO
 		$t=$getnbbiengenre->fetchAll(PDO::FETCH_OBJ);
 		return $t;
 	}
-//---------------------------------------------------------------------		
-	function Modif($personne,$ville,$budget,$genre,$ide)
+function Modif($personne,$ville,$budget,$genre,$ide)
 	{
 	$Modif=$this->prepare("UPDATE demande d, personne p SET p.prenom= ?, d.ville= ?, d.budget= ?, d.genre= ? WHERE p.idPersonne=d.idPersonne AND d.idDemande= ?");
 	$Modif->execute(array($personne,$ville,$budget,$genre,$ide));
 	// LA BONNE REQ DANS PHPMYADMIN
 	// UPDATE demande d, personne p SET p.prenom='jean', d.ville= 'Saint-Joseph' , d.budget= '150000' , d.genre= 'maison' , d.superficie= '120' WHERE p.idPersonne=d.idPersonne AND idDemande = 2;
 	}
-//---------------------------------------------------------------------		
-	function Insert($personne,$ville,$budget,$genre)
+	
+	
+function Insert($personne,$superficie,$ville,$budget,$genre)
 	{
-	$Insert=$this->prepare("INSERT INTO demande (isDemande, idPersonne, genre, ville, budget, superficie) VALUES ('', '', '?', '?', '?', '?')");
-	$Insert->execute(array($personne,$ville,$budget,$genre));	
+			$recuppersonne=$this->query("SELECT *FROM personne WHERE prenom='$personne'")->fetchAll(PDO::FETCH_ASSOC);
+	
+		if(isset($recuppersonne[0])){
+			$personnevar=$recuppersonne[0]['idPersonne'];      //variable pour l'id de personne
+			$demandemaxi=$this->query("SELECT MAX(idDemande) from demande")->fetchAll(PDO::FETCH_NUM)[0][0]+1;   //recupere l'id max de demande
+		$this->query("INSERT INTO demande (idDemande, idPersonne, genre, ville, budget, superficie) VALUES ('$demandemaxi', '$personnevar', '$genre', '$ville', '$budget', '$superficie')");
+		
+	
+		} else{
+			$personnemaxi=$this->query("SELECT MAX(idPersonne) FROM personne")->fetchAll(PDO::FETCH_NUM)[0][0]+1;
+			$Insert=$this->query("INSERT INTO personne (idPersonne,prenom) values ('$personnemaxi','$personne')");
+			$demandemaxi=$this->query("SELECT MAX(idDemande) from demande")->fetchAll(PDO::FETCH_NUM)[0][0]+1;   //recupere l'id max de demande
+
+			$this->query("INSERT INTO demande (idDemande, idPersonne, genre, ville, budget, superficie) VALUES ('$demandemaxi', '$personnemaxi', '$genre', '$ville', '$budget', '$superficie')");
+			
+		}
+	
 	}
 
-//---------------------------------------------------------------------	
-	function recupmembre() // fonction qui récupere les membres de ma base de donnée
-	{
+
+function recupmembre() // fonction qui récupere les membres de ma base de donnée
+{
 	return $this->query("SELECT * FROM membres");
-	}
-//---------------------------------------------------------------------	
-	function Connexionsession()
-	{
+}
+
+function Connexionsession(){
 	$login=$_POST['login'];
+		if ($stock['login']==$login && $stock['motpasse']== $motpasse) {
 	$motpasse=$_POST['motpasse'];
 	$recupmembre=$this->recupmembre();
-	while ($stock=$recupmembre->fetch(PDO::FETCH_ASSOC)) {   //boucle récupère toute les données 
-		if ($stock['login']==$login && $stock['motpasse']== $motpasse) {
+	while ($stock=$recupmembre->fetch(PDO::FETCH_ASSOC)) {   //boucle récupère toute les données  
+
 				session_start();
 				$_SESSION['login']=$stock['login'];
 				$_SESSION['motpasse']=$stock['motpasse'];
@@ -147,3 +162,5 @@ class DaoImmo extends MyPDO
 	return false;
 }
 };// fin de classe
+
+?>
