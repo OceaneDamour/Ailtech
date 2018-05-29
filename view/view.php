@@ -222,13 +222,13 @@ class Vue
 			<table  class=cadre width=60%  >
 			<tr ><td align=center>
 			<form name= formulaire action=./controller.php  method=post target=controller> 
-			Prenom:<input type=text size=30 name=ville value=>
-			ville:<input type=text size=30 name=ville value=>
-			budget:<input type=number size=10 name=budget value=>
-			genre:<input type=text size=12 name=genre value=>
+			Prenom:<input type=text size=30 name=personne value= >
+			ville:<input type=text size=30 name=ville value= >
+			budget:<input type=number size=10 name=budget value= >
+			genre:<input type=text size=12 name=genre value= >
 			<input type=hidden name=cas value=nouveau>
 			<tr><td align=center>
-			superficie:<input type=number name=superficie value=></td></tr>
+			superficie:<input type=number name=superficie value=> </td></tr>
 			<tr><td align=center>
 			<input type=button value=Insérer onclick=javascript:Validation();>
 			</form></td></tr></table></div>
@@ -236,7 +236,6 @@ class Vue
 		include "../inc/footer.inc.php";
 
 	}
-
 	//----------------------------------------------
 	function enteteHtml()
 	{
