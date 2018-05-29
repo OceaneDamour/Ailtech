@@ -78,9 +78,9 @@ function Modif($personne,$ville,$budget,$genre,$ide)
 //	}
 
 //---------------------------------------------------------------------
-function Insert($personne,$ville,$budget,$genre)
+function Insert($personne,$superficie,$ville,$budget,$genre)
 	{
-	return $this->monDao->Insert($personne,$ville,$budget,$genre);
+	return $this->monDao->Insert($personne,$superficie,$ville,$budget,$genre);
 	}
 //---------------------------------------------------------------------
 
@@ -93,3 +93,4 @@ return $this->monDao->Connexionsession();
 };// fin de classe
 
 ?>
+
