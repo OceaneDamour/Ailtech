@@ -112,3 +112,5 @@ INSERT INTO `demande` (`idDemande`, `idPersonne`, `genre`, `ville`, `budget`, `s
 (29,	53,	'appartement',	'Saint-Denis',	150000,	50,	'vente'),
 (30,	54,	'appartement',	'Saint-Denis',	377500,	40,	'vente'),
 (31,	55,	'appartement',	'Saint-Denis',	63000,	20,	'vente');
+
+CREATE TRIGGER AFTER_Update AFTER INSERT ON demande FOR EACH ROW BEGIN INSERT INTO histo_demande(idDemande,`idPersonne`,`genre`,`ville`,`budget`,`superficie`,`categorie`,ACTION) values (idDemande, idPersonne,genre,ville,budget,superficie,categorie,'UDPDATE'); END
